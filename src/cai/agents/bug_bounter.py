@@ -24,6 +24,15 @@ from cai.tools.reconnaissance.shodan import (  # pylint: disable=import-error # 
     shodan_host_info
 )
 
+from cai.tools.reconnaissance.tavily import (  # pylint: disable=import-error # noqa: E501
+    tavily_search,
+    tavily_search_with_images,
+    tavily_news_search,
+    tavily_research,
+    tavily_get_answer,
+    tavily_domain_search,
+)
+
 load_dotenv()
 # Prompts
 bug_bounter_system_prompt = load_prompt_template("prompts/system_bug_bounter.md")
@@ -31,8 +40,13 @@ bug_bounter_system_prompt = load_prompt_template("prompts/system_bug_bounter.md"
 tools = [
     generic_linux_command,
     execute_code,
-    shodan_search,
-    shodan_host_info
+    make_google_search,
+    tavily_search,
+    tavily_search_with_images,
+    tavily_news_search,
+    tavily_research,
+    tavily_get_answer,
+    tavily_domain_search,
 ]
 
 if os.getenv('GOOGLE_SEARCH_API_KEY') and os.getenv('GOOGLE_SEARCH_CX'):

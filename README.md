@@ -65,7 +65,10 @@ Cybersecurity AI (CAI) is a lightweight, open-source framework that empowers sec
 
 - [Cybersecurity AI (`CAI`)](#cybersecurity-ai-cai)
   - [:bookmark: Table of Contents](#bookmark-table-of-contents)
-  - [🎯 Milestones](#-milestones)
+  - [🎯 Impact](#-impact)
+    - [🏆 Competitions and challenges](#-competitions-and-challenges)
+    - [📊 Research Impact](#-research-impact)
+    - [📚 Research products: `Cybersecurity AI`](#-research-products-cybersecurity-ai)
   - [PoCs](#pocs)
   - [Motivation](#motivation)
     - [:bust\_in\_silhouette: Why CAI?](#bust_in_silhouette-why-cai)
@@ -100,6 +103,7 @@ Cybersecurity AI (CAI) is a lightweight, open-source framework that empowers sec
   - [FAQ](#faq)
   - [Citation](#citation)
   - [Acknowledgements](#acknowledgements)
+    - [Academic Collaborations](#academic-collaborations)
 
 
 
@@ -127,9 +131,9 @@ Cybersecurity AI (CAI) is a lightweight, open-source framework that empowers sec
 - **Collaborative research initiatives** with international academic institutions focused on developing cybersecurity education curricula and training methodologies [![arXiv](https://img.shields.io/badge/arXiv-2508.13588-b31b1b.svg)](https://arxiv.org/abs/2508.13588)
 
 
-### 📚 Research products
+### 📚 Research products: `Cybersecurity AI`
 
-|   |    |    |
+|  CAI, An Open, Bug Bounty-Ready Cybersecurity AI |  The Dangerous Gap Between Automation and Autonomy  |  CAI Fluency, A Framework for Cybersecurity AI Fluency  |
 |---|---|---|
 | [<img src="https://aliasrobotics.com/img/paper-cai.png" width="350">](https://arxiv.org/pdf/2508.13588) | [<img src="https://aliasrobotics.com/img/cai_automation_vs_autonomy.png" width="350">](https://www.arxiv.org/pdf/2506.23592) | [<img src="https://aliasrobotics.com/img/cai_fluency_cover.png" width="350">](https://arxiv.org/pdf/2504.06017) |
 

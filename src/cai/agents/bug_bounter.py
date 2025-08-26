@@ -26,11 +26,6 @@ from cai.tools.reconnaissance.shodan import (  # pylint: disable=import-error # 
 
 from cai.tools.reconnaissance.tavily import (  # pylint: disable=import-error # noqa: E501
     tavily_search,
-    tavily_search_with_images,
-    tavily_news_search,
-    tavily_research,
-    tavily_get_answer,
-    tavily_domain_search,
 )
 
 load_dotenv()
@@ -42,11 +37,6 @@ tools = [
     execute_code,
     make_google_search,
     tavily_search,
-    tavily_search_with_images,
-    tavily_news_search,
-    tavily_research,
-    tavily_get_answer,
-    tavily_domain_search,
 ]
 
 if os.getenv('GOOGLE_SEARCH_API_KEY') and os.getenv('GOOGLE_SEARCH_CX'):

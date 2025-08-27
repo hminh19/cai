@@ -19,11 +19,6 @@ from cai.tools.reconnaissance.exec_code import (  # pylint: disable=import-error
     execute_code
 )
 
-from cai.tools.reconnaissance.shodan import (  # pylint: disable=import-error # noqa: E501
-    shodan_search,
-    shodan_host_info
-)
-
 from cai.tools.reconnaissance.tavily import (  # pylint: disable=import-error # noqa: E501
     tavily_search,
 )

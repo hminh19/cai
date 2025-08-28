@@ -25,7 +25,7 @@ from cai.tools.reconnaissance.tavily import (  # pylint: disable=import-error # 
     tavily_github_exploit_search,
     tavily_cve_search,
     tavily_exploit_research,
-    
+
 )
 
 from cai.util import load_prompt_template, create_system_prompt_renderer
@@ -40,6 +40,12 @@ tools = [
     #run_ssh_command_with_credentials,
     execute_code,
     tavily_search,
+    extract_exploit_details,
+    tavily_security_advisory_search,
+    tavily_github_exploit_search,
+    tavily_cve_search,
+    tavily_exploit_research,
+    
 ]
 
 # Add make_web_search_with_explanation function if PERPLEXITY_API_KEY environment variable is set

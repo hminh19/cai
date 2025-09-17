@@ -58,5 +58,4 @@ bug_bounter_agent = Agent(
         model=os.getenv('CAI_MODEL', "alias0"),
         openai_client=AsyncOpenAI(),
     )
-   
 )

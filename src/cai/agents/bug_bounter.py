@@ -48,6 +48,14 @@ tools = [
 if os.getenv('GOOGLE_SEARCH_API_KEY') and os.getenv('GOOGLE_SEARCH_CX'):
     tools.append(make_google_search)
 
+ollama_api_base = os.getenv("OLLAMA_API_BASE", "http://localhost:11434/v1")
+openai_api_key = os.getenv("OPENAI_API_KEY", "sk-ollama")
+
+openai_client = AsyncOpenAI(
+    api_key=openai_api_key,
+    base_url=ollama_api_base
+)
+
 bug_bounter_agent = Agent(
     name="Bug Bounter",
     instructions=create_system_prompt_renderer(bug_bounter_system_prompt),
@@ -56,6 +64,6 @@ bug_bounter_agent = Agent(
     tools=tools,
     model=OpenAIChatCompletionsModel(
         model=os.getenv('CAI_MODEL', "alias0"),
-        openai_client=AsyncOpenAI(),
+        openai_client=openai_client,
     )
 )

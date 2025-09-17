@@ -34,14 +34,6 @@ tools = [
 load_dotenv()
 model_name = os.getenv("CAI_MODEL", "alias0")
 
-ollama_api_base = os.getenv("OLLAMA_API_BASE", "http://localhost:11434/v1")
-openai_api_key = os.getenv("OPENAI_API_KEY", "sk-ollama")
-
-openai_client = AsyncOpenAI(
-    api_key=openai_api_key,
-    base_url=ollama_api_base
-)
-
 app_logic_mapper = Agent(
     name="AppLogicMapper",
     description="Agent specializing in application analysis to understand the logic of operation and return a complete map of it.",
@@ -49,7 +41,7 @@ app_logic_mapper = Agent(
     tools=tools,
     model=OpenAIChatCompletionsModel(
         model=model_name,
-        openai_client=openai_client,
+        openai_client=AsyncOpenAI(),
     ),
 )
 
@@ -69,7 +61,7 @@ android_sast = Agent(
         ],
     model=OpenAIChatCompletionsModel(
         model=model_name,
-        openai_client=openai_client,
+        openai_client=AsyncOpenAI(),
     ),
 )
 

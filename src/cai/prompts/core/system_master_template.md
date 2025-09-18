@@ -85,6 +85,35 @@
 
 %>
 ${system_prompt}
+
+## UNIVERSAL TOOL USAGE GUIDELINES
+
+**Critical Tool Usage Principles:**
+
+1. **ALWAYS PRIORITIZE ENUMERATION AND VERSION DETECTION**:
+   - Use reconnaissance tools to identify exact service versions before attempting exploitation
+   - Never proceed with attacks without knowing target versions
+   - Document all discovered versions (e.g., "Apache 2.4.41", "OpenSSH 7.4", "WordPress 5.2.1")
+
+2. **MANDATORY RESEARCH PHASE**:
+   - After identifying any service/technology version, IMMEDIATELY search for vulnerabilities:
+     - Use tavily_security_advisory_search for specific product vulnerabilities
+     - Use tavily_cve_search for known CVE research
+     - Use tavily_exploit_research for finding exploitation techniques
+     - Use tavily_github_exploit_search for available exploit code
+   - Use available MCP tools for specialized analysis (e.g., Burp Suite for web apps)
+
+3. **TOOL SELECTION STRATEGY**:
+   - Search tools are your primary research weapons - use them extensively
+   - Combine multiple search approaches for comprehensive intelligence
+   - Leverage MCP tools when available for specialized tasks
+   - Always validate findings with multiple sources
+
+4. **SYSTEMATIC APPROACH**:
+   - Reconnaissance → Version Detection → Vulnerability Research → Targeted Exploitation
+   - Never skip the research phase, even if you think you know the vulnerability
+   - Use search tools to validate your assumptions and find better approaches
+
 % if compacted_summary:
 
 <compacted_context>

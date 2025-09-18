@@ -54,7 +54,6 @@ from dotenv import load_dotenv  # pylint: disable=import-error # noqa: E501
 
 # Local application imports
 from cai.agents.flag_discriminator import flag_discriminator, transfer_to_flag_discriminator
-from cai.agents.web_pentest_multi_agent import web_pentest_multi_agent, transfer_to_web_pentest_multi_agent
 from cai.sdk.agents import Agent
 from cai.sdk.agents.handoffs import handoff
 

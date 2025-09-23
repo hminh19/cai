@@ -97,11 +97,10 @@ ${system_prompt}
 
 2. **MANDATORY RESEARCH PHASE**:
    - After identifying any service/technology version, IMMEDIATELY search for vulnerabilities:
-     - Use tavily_security_advisory_search for specific product vulnerabilities
-     - Use tavily_cve_search for known CVE research
-     - Use tavily_exploit_research for finding exploitation techniques
-     - Use tavily_github_exploit_search for available exploit code
-   - Use available MCP tools for specialized analysis (e.g., Burp Suite for web apps)
+     - Use tavily_search for vulnerability research, CVE discovery, and exploit hunting
+     - Use extract_exploit_details to analyze search results for actionable information
+     - Use available MCP tools (especially Burp Suite) for specialized web application analysis
+   - Always use specific search queries like "ProductName version CVE vulnerability exploit"
 
 3. **TOOL SELECTION STRATEGY**:
    - Search tools are your primary research weapons - use them extensively

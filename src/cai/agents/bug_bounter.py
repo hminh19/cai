@@ -22,11 +22,6 @@ from cai.tools.reconnaissance.exec_code import (  # pylint: disable=import-error
 from cai.tools.reconnaissance.tavily import (  # pylint: disable=import-error # noqa: E501
     tavily_search,
     extract_exploit_details,
-    tavily_security_advisory_search,
-    tavily_github_exploit_search,
-    tavily_cve_search,
-    tavily_exploit_research,
-
 )
 
 load_dotenv()
@@ -39,10 +34,6 @@ tools = [
     make_google_search,
     tavily_search,
     extract_exploit_details,
-    tavily_security_advisory_search,
-    tavily_github_exploit_search,
-    tavily_cve_search,
-    tavily_exploit_research,
 ]
 
 if os.getenv('GOOGLE_SEARCH_API_KEY') and os.getenv('GOOGLE_SEARCH_CX'):

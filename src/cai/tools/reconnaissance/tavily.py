@@ -107,95 +107,31 @@ async def _execute_tavily_search(**kwargs: Any) -> str:
 
 
 @function_tool
-async def tavily_exploit_research(query: str, max_results: int = 7) -> str:
-    """
-    Advanced search for exploit research with content filtering and prioritization.
-    Returns results sorted by exploit potential with extracted actionable content.
-    """
-    return await _execute_tavily_search(
-        query=f"{query} exploit PoC vulnerability",  # Enhanced query
-        search_depth="advanced",
-        max_results=max_results,
-        include_raw_content=True,
-        include_answer=True
-    )
-
-
-@function_tool
-async def tavily_cve_search(cve_id: str, include_poc: bool = True) -> str:
-    """
-    Search for specific CVE information with focus on PoCs and exploits.
-    """
-    query = f"{cve_id}"
-    if include_poc:
-        query += " exploit PoC proof of concept"
-    
-    return await _execute_tavily_search(
-        query=query,
-        search_depth="advanced",
-        max_results=5,
-        include_raw_content=True,
-        include_answer=True
-    )
-
-
-@function_tool
-async def tavily_github_exploit_search(
-    technology: str,
-    vulnerability_type: str = "",
-    max_results: int = 5
-) -> str:
-    """
-    Search specifically for GitHub repositories containing exploits and PoCs.
-    """
-    query = f"site:github.com {technology} {vulnerability_type} exploit PoC"
-    
-    return await _execute_tavily_search(
-        query=query,
-        search_depth="advanced",
-        include_domains=["github.com"],
-        max_results=max_results,
-        include_raw_content=True
-    )
-
-
-@function_tool
-async def tavily_security_advisory_search(
-    product: str,
-    version: str = "",
-    max_results: int = 5
-) -> str:
-    """
-    Search for security advisories and vulnerability disclosures.
-    """
-    query = f"{product} {version} security advisory vulnerability disclosure"
-    
-    return await _execute_tavily_search(
-        query=query,
-        search_depth="advanced",
-        exclude_domains=["social-media-sites.com", "forums.com"],  # Focus on official sources
-        max_results=max_results,
-        include_raw_content=True,
-        include_answer=True
-    )
-
-
-@function_tool
 async def tavily_search(
     query: str,
+    search_depth: str = "advanced",
     include_domains: List[str] | None = None,
     exclude_domains: List[str] | None = None,
-    max_results: int = 5
+    max_results: int = 7
 ) -> str:
     """
-    Basic search with result prioritization for red team operations.
+    Perform a comprehensive search using the Tavily API, with content filtering and prioritization.
+    Results are sorted by exploit potential, with actionable content extracted.
+
+    :param query: The search query. You can use search operators like 'site:' to focus on specific domains.
+    :param search_depth: The depth of the search. Can be "basic" or "advanced". Defaults to "advanced".
+    :param include_domains: A list of domains to specifically include in the search.
+    :param exclude_domains: A list of domains to exclude from the search.
+    :param max_results: The maximum number of results to return.
     """
     return await _execute_tavily_search(
         query=query,
-        search_depth="basic",
+        search_depth=search_depth,
         include_domains=include_domains or [],
         exclude_domains=exclude_domains or [],
-        max_results=max_results
+        max_results=max_results,
+        include_raw_content=True,
+        include_answer=True
     )
 
 

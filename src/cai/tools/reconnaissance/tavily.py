@@ -136,49 +136,143 @@ async def tavily_search(
 
 
 @function_tool
-async def extract_exploit_details(search_results: str) -> str:
+def extract_exploit_details(search_results: str) -> str:
     """
-    Extract and summarize the most actionable exploit information from search results.
+    Extract and summarize the most actionable exploit information from search results or plain text.
     This function helps the agent focus on implementable PoCs and exploits.
+    Handles both JSON search results and plain text vulnerability information.
     """
     try:
-        results_data = json.loads(search_results)
+        # Try to parse as JSON first
+        try:
+            results_data = json.loads(search_results)
+            
+            # If it's valid JSON with results structure, process it
+            if isinstance(results_data, dict) and "results" in results_data:
+                return _process_json_search_results(results_data)
+            
+        except json.JSONDecodeError:
+            # If not JSON, treat as plain text vulnerability information
+            pass
         
-        if "results" not in results_data:
-            return json.dumps({"error": "No results found in the provided data"})
-        
-        actionable_summary = {
-            "high_priority_exploits": [],
-            "code_snippets": [],
-            "cve_references": [],
-            "exploit_urls": [],
-            "summary": ""
-        }
-        
-        for result in results_data["results"][:3]:  # Focus on top 3 results
-            if result.get("exploit_potential", 0) > 3:  # High potential only
-                actionable_content = result.get("actionable_content", {})
-                
-                exploit_info = {
-                    "title": result.get("title", ""),
-                    "url": result.get("url", ""),
-                    "code_snippets": actionable_content.get("code_snippets", []),
-                    "cves": actionable_content.get("cves", []),
-                    "exploit_mentions": actionable_content.get("exploit_mentions", [])
-                }
-                
-                actionable_summary["high_priority_exploits"].append(exploit_info)
-                actionable_summary["code_snippets"].extend(actionable_content.get("code_snippets", []))
-                actionable_summary["cve_references"].extend(actionable_content.get("cves", []))
-        
-        # Create summary
-        total_exploits = len(actionable_summary["high_priority_exploits"])
-        total_code = len(actionable_summary["code_snippets"])
-        total_cves = len(set(actionable_summary["cve_references"]))
-        
-        actionable_summary["summary"] = f"Found {total_exploits} high-priority exploits, {total_code} code snippets, and {total_cves} CVE references ready for implementation."
-        
-        return json.dumps(actionable_summary, indent=2, ensure_ascii=False)
+        # Process as plain text vulnerability information
+        return _process_plain_text_vulnerability(search_results)
         
     except Exception as e:
         return json.dumps({"error": f"Error processing exploit details: {str(e)}"})
+
+
+def _process_json_search_results(results_data: dict) -> str:
+    """Process structured JSON search results."""
+    actionable_summary = {
+        "high_priority_exploits": [],
+        "code_snippets": [],
+        "cve_references": [],
+        "exploit_urls": [],
+        "summary": ""
+    }
+    
+    for result in results_data["results"][:3]:  # Focus on top 3 results
+        if result.get("exploit_potential", 0) > 3:  # High potential only
+            actionable_content = result.get("actionable_content", {})
+            
+            exploit_info = {
+                "title": result.get("title", ""),
+                "url": result.get("url", ""),
+                "code_snippets": actionable_content.get("code_snippets", []),
+                "cves": actionable_content.get("cves", []),
+                "exploit_mentions": actionable_content.get("exploit_mentions", [])
+            }
+            
+            actionable_summary["high_priority_exploits"].append(exploit_info)
+            actionable_summary["code_snippets"].extend(actionable_content.get("code_snippets", []))
+            actionable_summary["cve_references"].extend(actionable_content.get("cves", []))
+    
+    # Create summary
+    total_exploits = len(actionable_summary["high_priority_exploits"])
+    total_code = len(actionable_summary["code_snippets"])
+    total_cves = len(set(actionable_summary["cve_references"]))
+    
+    actionable_summary["summary"] = f"Found {total_exploits} high-priority exploits, {total_code} code snippets, and {total_cves} CVE references ready for implementation."
+    
+    return json.dumps(actionable_summary, indent=2, ensure_ascii=False)
+
+
+def _process_plain_text_vulnerability(text: str) -> str:
+    """Process plain text vulnerability information and extract actionable intelligence."""
+    
+    # Extract CVE IDs
+    cve_pattern = r'CVE-\d{4}-\d{4,7}'
+    cves = re.findall(cve_pattern, text, re.IGNORECASE)
+    
+    # Extract version information
+    version_pattern = r'v?(\d+\.\d+(?:\.\d+)?(?:[-._][a-zA-Z0-9]+)?)'
+    versions = re.findall(version_pattern, text)
+    
+    # Look for vulnerability keywords
+    vuln_keywords = [
+        'vulnerability', 'exploit', 'rce', 'sql injection', 'xss', 'csrf',
+        'buffer overflow', 'directory traversal', 'file inclusion',
+        'authentication bypass', 'privilege escalation', 'code execution'
+    ]
+    
+    found_keywords = []
+    for keyword in vuln_keywords:
+        if keyword.lower() in text.lower():
+            found_keywords.append(keyword)
+    
+    # Extract potential software/product names (simple heuristic)
+    # Look for capitalized words that might be product names
+    product_pattern = r'\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)\b'
+    products = re.findall(product_pattern, text)
+    # Filter common words
+    common_words = {'The', 'This', 'That', 'A', 'An', 'And', 'Or', 'But', 'In', 'On', 'At', 'To', 'For', 'Of', 'With', 'By'}
+    products = [p for p in products if p not in common_words][:5]  # Limit to 5
+    
+    # Assess severity based on keywords
+    high_severity_terms = ['rce', 'remote code execution', 'privilege escalation', 'authentication bypass']
+    severity = "HIGH" if any(term in text.lower() for term in high_severity_terms) else "MEDIUM"
+    
+    actionable_summary = {
+        "vulnerability_analysis": {
+            "identified_products": products,
+            "cve_references": list(set(cves)),
+            "versions_mentioned": list(set(versions)),
+            "vulnerability_types": found_keywords,
+            "severity_assessment": severity
+        },
+        "exploitation_potential": {
+            "has_cve": len(cves) > 0,
+            "has_version_info": len(versions) > 0,
+            "high_impact": severity == "HIGH",
+            "actionable_score": len(cves) * 3 + len(found_keywords) * 2 + (2 if severity == "HIGH" else 1)
+        },
+        "recommendations": [],
+        "summary": ""
+    }
+    
+    # Generate recommendations
+    if cves:
+        actionable_summary["recommendations"].append(f"Search for exploits for: {', '.join(cves)}")
+    
+    if products and versions:
+        for product in products[:2]:  # Limit to top 2 products
+            for version in versions[:2]:  # Limit to top 2 versions
+                actionable_summary["recommendations"].append(f"Research vulnerabilities in {product} version {version}")
+    
+    if found_keywords:
+        top_vulns = found_keywords[:3]  # Top 3 vulnerability types
+        actionable_summary["recommendations"].append(f"Focus on {', '.join(top_vulns)} attack vectors")
+    
+    # Generate summary
+    cve_count = len(cves)
+    product_count = len(products)
+    vuln_count = len(found_keywords)
+    
+    actionable_summary["summary"] = (
+        f"Identified {cve_count} CVE references, {product_count} products, "
+        f"and {vuln_count} vulnerability types. Severity: {severity}. "
+        f"Actionability Score: {actionable_summary['exploitation_potential']['actionable_score']}"
+    )
+    
+    return json.dumps(actionable_summary, indent=2, ensure_ascii=False)
